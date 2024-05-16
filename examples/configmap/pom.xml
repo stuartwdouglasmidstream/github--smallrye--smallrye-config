@@ -1,65 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.smallrye</groupId>
     <artifactId>smallrye-parent</artifactId>
     <version>42</version>
-    <relativePath />
+    <relativePath></relativePath>
   </parent>
-
   <groupId>io.smallrye.config.examples</groupId>
   <artifactId>configmap</artifactId>
   <version>3.7.1</version>
-
   <name>SmallRye Config Examples: ConfigMap</name>
-
+  <scm>
+    <tag>3.7.1</tag>
+  </scm>
   <properties>
     <sonar.skip>true</sonar.skip>
     <version.smallrye.testing>2.3.0</version.smallrye.testing>
   </properties>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>io.smallrye.testing</groupId>
         <artifactId>smallrye-testing-bom</artifactId>
         <version>${version.smallrye.testing}</version>
-        <scope>import</scope>
         <type>pom</type>
+        <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>jakarta.annotation</groupId>
       <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.smallrye.config</groupId>
       <artifactId>smallrye-config</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>io.smallrye.config</groupId>
       <artifactId>smallrye-config-source-file-system</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <!-- Test Dependencies -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.5.2</version>
         <executions>
@@ -81,50 +74,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>0.44.0</version>
-        <configuration>
-          <verbose>true</verbose>
-          <registry>docker-registry:5000</registry>
-          <pullRegistry>docker.io</pullRegistry>
-          <images>
-            <image>
-              <name>smallrye-config-examples/configmap-app</name>
-              <build>
-                <from>adoptopenjdk/openjdk11:alpine-slim</from>
-                <ports>
-                  <port>8080</port>
-                </ports>
-                <workdir>/usr/local/apps</workdir>
-                <assembly>
-                  <name>usr/local/apps</name>
-                  <inline>
-                    <files>
-                      <file>
-                        <source>${project.build.directory}/${project.artifactId}-app.jar</source>
-                        <destName>${project.artifactId}-app.jar</destName>
-                      </file>
-                    </files>
-                  </inline>
-                </assembly>
-                <cmd>java -jar ${project.artifactId}-app.jar</cmd>
-              </build>
-              <run>
-                <ports>
-                  <port>8080:8080</port>
-                </ports>
-              </run>
-            </image>
-          </images>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>3.7.1</tag>
-  </scm>
 </project>
